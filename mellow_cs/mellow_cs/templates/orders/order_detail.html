@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ order.order_nr }}{% endblock %}
+
+{% block content %}
+
+<!-- Order details section -->
+<div class="container">
+  <div class="row">
+    <div class="col-sm-4">
+      <h2>{{ order.order_nr }}</h2>
+      <h2>{{ order.order_date }}</h2>
+      <h2>{{ order.article_title }}</h2>
+      <h2>{{ order.order_total }}</h2>
+      <h2>{{ order.order_payment }}</h2>
+    </div>
+    <div class="col-sm-4">
+      <h2>{{ order.user_email }}</h2>
+      <h2>{{ order.user_bill_firstname }} {{ order.user_bill_lastname }}</h2>
+      <h2>{{ order.country_title }}</h2>
+
+    </div>
+    <div class="col-sm-4">
+      <h2>{{ order.order_nr }}</h2>
+
+    </div>
+  </div>
+</div>
+<!-- End Order details section -->
+{% endblock content %}
+

@@ -1,0 +1,5 @@
+[run]
+include = mellow_cs/*
+omit = *migrations*, *tests*
+plugins =
+    django_coverage_plugin

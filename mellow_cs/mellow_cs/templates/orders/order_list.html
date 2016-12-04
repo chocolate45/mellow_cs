@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% load static i18n %}
+{% load humanize %}
+{% block title %}Orders{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>Orders</h2>
+
+  <!-- Action buttons -->
+  <div class="row">
+
+    <div class="col-sm-8">
+      <form action="{% url 'orders:order_list' %}" method="GET">
+        <input type="text" name="q" />
+        <button type="submit" class="btn btn-primary">Search</button>
+      </form>
+    </div>
+    <div class="col-sm-4">
+      <a class="btn btn-primary" href="#" role="button">Update Orders</a>
+    </div>
+    <div class="col-sm-12">
+      <a class="btn btn-link" href="{% url 'orders:order_list' %}" role="button">All</a>
+      <a class="btn btn-link" href="#" role="button">Latest</a>
+    </div>
+  </div>
+  <!-- End Action buttons -->
+
+  <!-- Order List -->
+  {% if order_list.count != 0 %}
+    <div id="accordion" role="tablist" aria-multiselectable="true">
+      {% for order in order_list %}
+        <div class="card">
+          <div class="card-header" role="tab" id="heading{{ forloop.counter }}">
+            <h5 class="mb-0">
+              <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter}}">
+                {{ order.order_nr }} | {{ order.article_title }}
+              </a>
+
+            </h5>
+            {{ order.user_bill_firstname }} {{ order.user_bill_lastname }} bought {{ order.article_title }} {{ order.order_date|naturaltime }}
+          </div>
+
+          <div id="collapse{{ forloop.counter }}" class="collapse" role="tabpanel" aria-labelledby="heading{{ forloop.counter }}">
+            <div class="card-block">
+              <div class="container">
+                <div class="row">
+                  <div class="col-sm-5">
+                    <div class="list-group">
+                      <!-- Order number item -->
+                      <span class="list-group-item list-group-item-action">
+                        <h6 class="list-group-item-heading">Order number</h6>
+                        <p class="list-group-item">{{ order.order_nr }}</p>
+                      </span>
+                      <!-- End Order number item -->
+                      <!-- Order date item -->
+                      <span class="list-group-item list-group-item-action">
+                        <h6 class="list-group-item-heading">Order date</h6>
+                        <p class="list-group-item">{{ order.order_date }}</p>
+                      </span>
+                      <!-- End Order date item -->
+                      <!-- Payment details item -->
+                      <span class="list-group-item list-group-item-action">
+                        <h6 class="list-group-item-heading">Payment details</h6>
+                        <p class="list-group-item">
+                          Method: {{ order.order_payment }}<br />
+                          Status: {{ order.status }}
+                        </p>
+                      </span>
+                      <!-- End Payment details item -->
+                      <!-- Order details item -->
+                      <span class="list-group-item list-group-item-action">
+                        <h6 class="list-group-item-heading">Order details</h6>
+                        <p class="list-group-item">
+                          Total: {{ order.order_total|intcomma }}€<br />
+                          Discount: {{ order.voucher_discount|intcomma }}€<br />
+                          Shipping: {{ order.order_delivery_cost|intcomma }}€<br />
+                          </p>
+                      </span>
+                      <!-- End Order details item -->
+                      <!-- Product details item -->
+                      <span class="list-group-item list-group-item-action">
+                        <h6 class="list-group-item-heading">Product details</h6>
+                        <p class="list-group-item">
+                          {{ order.article_title }} | Qty: {{ order.article_quantity }}<br />
+                          Price: {{ order.article_price|intcomma}}€ <br />
+                          Serial number:
+                        </p>
+                      </span>
+                      <!--  End Product details item -->
+                    </div>
+                  </div>
+                  <div class="col-sm-5">
+                    <div class="list-group">
+                      <!-- Name item -->
+                      <span class="list-group-item list-group-item-action">
+                        <h6 class="list-group-item-heading">Name</h6>
+                        <p class="list-group-item">
+                          {{ order.user_bill_firstname }} {{ order.user_bill_lastname }}
+                        </p>
+                      </span>
+                      <!-- End Name item -->
+                      <!-- Email item -->
+                      <span class="list-group-item list-group-item-action">
+                        <h6 class="list-group-item-heading">Email</h6>
+                        <p class="list-group-item">
+                          {{ order.user_email }}
+                        </p>
+                      </span>
+                      <!-- End Email item -->
+                      <!-- Billing address item -->
+                      <span class="list-group-item list-group-item-action">
+                        <h6 class="list-group-item-heading">Billing address</h6>
+                        <p class="list-group-item">
+                          {{ order.user_bill_street }} {{ order.user_bill_sreet_nr }}<br />
+                          {{ order.user_bill_zipcode }} {{order.user_bill_city }}<br />
+                          {{ order.country_title }}
+                        </p>
+                      </span>
+                      <!-- End billing address item -->
+                      <!-- Shipping address item -->
+                      <span class="list-group-item list-group-item-action">
+                        <h6 class="list-group-item-heading">Shippping address</h6>
+                        <p class="list-group-item">
+                          {{ order.user_delivery_firstname }} {{ order.user_delivery_lastname }}
+                          {{ order.user_delivery_street }} {{ order.user_delivery_sreet_nr }}<br />
+                          {{ order.user_delivery_zipcode }} {{order.user_delivery_city }}<br />
+                          {{ order.country_title }}
+                        </p>
+                      </span>
+                      <!-- End shipping address item -->
+                    </div>
+                  </div>
+                  <div class="col-sm-2">
+                    <a class="btn btn-link" href="{% url 'orders:order_detail' order.pk %}" role="button">View Order</a>
+                    <a class="btn btn-link" href="#" role="button">Update Order</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <h4>Oops, there aren't any orders yet. <a href="#">Fetch orders!</a></h4>
+  {% endif %}
+  <!-- End Order List -->
+</div>
+{% endblock content %}
